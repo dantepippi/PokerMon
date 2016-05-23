@@ -10,36 +10,51 @@
     tools:layout_editor_absoluteY="25dp"
     android:id="@+id/constraintLayout">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:text="Level "
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="71dp"
+        android:id="@+id/textView3"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout"
+        android:layout_marginStart="32dp"
+        tools:layout_constraintLeft_creator="0"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:layout_marginTop="8dp"
+        tools:layout_constraintTop_creator="0" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp"
+        android:id="@+id/appBarLayout"
+        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintTop_toTopOf="@+id/constraintLayout"
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintRight_toRightOf="@+id/constraintLayout"
+        tools:layout_constraintRight_creator="1">
 
     </android.support.design.widget.AppBarLayout>
 
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="77dp"
+        android:layout_height="61dp"
         android:inputType="number"
         android:ems="10"
         android:id="@+id/editText"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="131dp"
-        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout"
-        android:layout_marginStart="16dp"
+        tools:layout_editor_absoluteX="96dp"
+        tools:layout_editor_absoluteY="129dp"
+        app:layout_constraintLeft_toRightOf="@+id/textView3"
+        android:layout_marginStart="8dp"
         tools:layout_constraintLeft_creator="0"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout"
-        tools:layout_constraintTop_creator="0"
-        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
-        tools:layout_constraintBottom_creator="0"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        android:layout_marginTop="32dp"
+        tools:layout_constraintTop_creator="0" />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -47,13 +62,55 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_dialog_email"
-        tools:layout_editor_absoluteX="306dp"
-        tools:layout_editor_absoluteY="489dp"
+        tools:layout_editor_absoluteX="328dp"
+        tools:layout_editor_absoluteY="511dp"
+        app:backgroundTint="?attr/colorPrimaryDark"
         app:layout_constraintRight_toRightOf="@+id/constraintLayout"
-        android:layout_marginEnd="38dp"
-        tools:layout_constraintRight_creator="1"
+        android:layout_marginEnd="16dp"
+        tools:layout_constraintRight_creator="0"
         app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
-        android:layout_marginBottom="38dp"
-        tools:layout_constraintBottom_creator="1" />
+        android:layout_marginBottom="16dp"
+        tools:layout_constraintBottom_creator="0" />
+
+    <TextView
+        android:text="@string/small_blind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="104dp"
+        tools:layout_editor_absoluteY="71dp"
+        android:id="@+id/textView"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        app:layout_constraintLeft_toLeftOf="@+id/editText"
+        android:layout_marginStart="8dp"
+        tools:layout_constraintLeft_creator="0"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView3"
+        tools:layout_constraintBaseline_creator="0" />
+
+    <TextView
+        android:text="@string/big_blind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="230dp"
+        tools:layout_editor_absoluteY="71dp"
+        android:id="@+id/textView2"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        app:layout_constraintLeft_toRightOf="@+id/textView"
+        android:layout_marginStart="16dp"
+        tools:layout_constraintLeft_creator="0"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView"
+        tools:layout_constraintBaseline_creator="0" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="384dp"
+        android:layout_height="56dp"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="7dp"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintRight_toRightOf="@+id/constraintLayout"
+        tools:layout_constraintRight_creator="0" />
 
 </android.support.constraint.ConstraintLayout>

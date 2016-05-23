@@ -21,7 +21,8 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity" >
+        </activity>
         <activity
             android:name=".StructActivity"
             android:label="@string/title_activity_struct"
@@ -30,6 +31,9 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dstudios.pokermon.MainActivity" />
+        </activity>
+        <activity android:name=".RoundsActivity"
+            android:parentActivityName=".MainActivity">
         </activity>
     </application>
 
