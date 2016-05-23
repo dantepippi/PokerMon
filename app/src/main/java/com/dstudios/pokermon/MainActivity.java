@@ -1,5 +1,6 @@
 package com.dstudios.pokermon;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -32,14 +33,15 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     @Override
@@ -81,12 +83,16 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_players) {
-            // Handle the camera action
+
         } else if (id == R.id.nav_structure) {
+            Intent intent = new Intent(this, StructActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_history) {
 
         } else if (id == R.id.nav_manage) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_share) {
 
