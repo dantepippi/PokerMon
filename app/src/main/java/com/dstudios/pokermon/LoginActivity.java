@@ -9,6 +9,8 @@ import android.util.Log;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
 
@@ -51,7 +53,8 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("AUTH", "RESULT_OK");
                 // user is signed in!
                 FirebaseUser usr = FirebaseAuth.getInstance().getCurrentUser();
-                 Log.d("LOGIN", usr.getDisplayName());
+                FirebaseDatabase.getInstance().getReference().child("users").child(usr.getUid()).setValue(usr);
+                Log.d("LOGIN", usr.getDisplayName());
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
             } else {

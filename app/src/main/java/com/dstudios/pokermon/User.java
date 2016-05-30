@@ -7,6 +7,7 @@ public class User {
     private String displayName;
     private String email;
     private String uid;
+    private Boolean anonymous;
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -40,5 +41,13 @@ public class User {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public Boolean getAnonymous() {
+        return anonymous;
+    }
+
+    public void setAnonymous(Boolean anonymous) {
+        this.anonymous = anonymous;
     }
 }

@@ -25,8 +25,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -40,10 +39,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dstudios.pokermon.MainActivity" />
         </activity>
-        <activity
-            android:name=".RoundsActivity"
-            android:parentActivityName=".MainActivity" />
-
+        <activity android:name=".TournamentActivity"></activity>
     </application>
 
 </manifest>
