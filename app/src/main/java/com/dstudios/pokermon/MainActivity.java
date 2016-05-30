@@ -124,10 +124,6 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_players) {
 
-        } else if (id == R.id.nav_structure) {
-            Intent intent = new Intent(this, RoundsActivity.class);
-            startActivity(intent);
-
         } else if (id == R.id.nav_history) {
 
         } else if (id == R.id.nav_manage) {
