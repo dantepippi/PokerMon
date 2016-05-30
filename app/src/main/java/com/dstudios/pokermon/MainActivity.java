@@ -2,6 +2,7 @@ package com.dstudios.pokermon;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,7 +22,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity
@@ -34,11 +38,11 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         FirebaseApp app = FirebaseApp.getInstance();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databaseRef = database.getReference();
-        DatabaseReference tournRef = databaseRef.child("tournaments");
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference databaseRef = database.getReference();
+        final DatabaseReference tournRef = databaseRef.child("tournaments");
 
-        FirebaseUser usr = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser usr = getFirebaseUser();
         if (usr != null) {
             final String userId = usr.getUid();
             databaseRef.child("users").child(userId).addListenerForSingleValueEvent(
@@ -57,7 +61,7 @@ public class MainActivity extends AppCompatActivity
 
         }
         else {
-
+            startActivity(new Intent(this, LoginActivity.class));
         }
         setSupportActionBar(toolbar);
 
@@ -67,6 +71,15 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Tournament tournament = new Tournament();
+                Map<String, String> timestamp = ServerValue.TIMESTAMP;
+                tournament.setCreated(timestamp);
+                String firebaseUserUid = getFirebaseUserUid();
+                tournament.setOwner_uid(firebaseUserUid);
+                DatabaseReference tournChild = tournRef.child(firebaseUserUid);
+                String key = tournChild.push().getKey();
+                Map<String, Object> stringObjectMap = tournament.toMap();
+                tournChild.child(key).updateChildren(stringObjectMap);
 
             }
         });
@@ -80,6 +93,15 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+    }
+
+    @NonNull
+    private String getFirebaseUserUid() {
+        return getFirebaseUser().getUid();
+    }
+
+    private FirebaseUser getFirebaseUser() {
+        return FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override

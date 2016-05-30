@@ -13,7 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
-
+// TODO checar utilização dos metodos de login na MainActiviy
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     FirebaseAuth.AuthStateListener mAuthListener;
@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (usr != null) {
                     Log.d("AUTH", "User signed in correctly: " + usr);
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    //startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 } else {
                     //signed out
                     Log.d("AUTH", "User is not signed in");
@@ -44,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
     }
-
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -63,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                 // "sign in" again, or show a message
             }
         }
+
     }
 
     @Override

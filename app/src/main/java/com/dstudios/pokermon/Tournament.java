@@ -1,10 +1,24 @@
 package com.dstudios.pokermon;
 
+import com.google.firebase.database.ServerValue;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by dante on 29/05/2016.
  */
 
 public class Tournament {
+    public Map<String,String> getCreated() {
+        return created;
+    }
+
+    public void setCreated(Map<String, String> created) {
+        this.created = created;
+    }
+
+    private Map<String, String> created;
     private String owner_uid;
     private String buy_in;
     private String rebuy;
@@ -68,5 +82,18 @@ public class Tournament {
 
     public void setBlind_interval(Integer blind_interval) {
         this.blind_interval = blind_interval;
+    }
+
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("owner_uid", owner_uid);
+        result.put("buyin", buy_in);
+        result.put("rebuy", rebuy);
+        result.put("addon", add_on);
+        result.put("starting_chips", starting_chips);
+        result.put("blind_interval", blind_interval);
+        result.put("last_rebuy_level", last_rebuy_level);
+        result.put("timestamp", ServerValue.TIMESTAMP);
+        return result;
     }
 }

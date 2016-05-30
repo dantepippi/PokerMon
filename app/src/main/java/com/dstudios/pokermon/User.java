@@ -1,5 +1,7 @@
 package com.dstudios.pokermon;
 
+import com.google.firebase.auth.FirebaseUser;
+
 /**
  * Created by dante on 29/05/2016.
  */
@@ -7,6 +9,15 @@ public class User {
     private String displayName;
     private String email;
     private String uid;
+
+    public Boolean isAnonymous() {
+        return anonymous;
+    }
+
+    public void setAnonymous(Boolean anonymous) {
+        this.anonymous = anonymous;
+    }
+
     private Boolean anonymous;
 
     public User() {
@@ -43,11 +54,5 @@ public class User {
         this.uid = uid;
     }
 
-    public Boolean getAnonymous() {
-        return anonymous;
-    }
 
-    public void setAnonymous(Boolean anonymous) {
-        this.anonymous = anonymous;
-    }
 }
