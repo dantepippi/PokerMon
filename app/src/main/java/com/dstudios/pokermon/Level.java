@@ -5,6 +5,15 @@ package com.dstudios.pokermon;
  */
 
 public class Level {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    private Long id;
     private Integer number;
     private Integer small_blind;
     private Integer big_blind;
@@ -12,6 +21,16 @@ public class Level {
     private Integer time;
     private Boolean break_after;
     private Boolean add_on_after;
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    private String mode;
 
     public Integer getNumber() {
         return number;

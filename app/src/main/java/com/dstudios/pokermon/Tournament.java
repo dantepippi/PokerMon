@@ -10,15 +10,9 @@ import java.util.Map;
  */
 
 public class Tournament {
-    public Map<String,String> getCreated() {
-        return created;
-    }
 
-    public void setCreated(Map<String, String> created) {
-        this.created = created;
-    }
-
-    private Map<String, String> created;
+    private Map<String, String> timestamp_started;
+    private Map<String, String> timestamp_finished;
     private String owner_uid;
     private String buy_in;
     private String rebuy;
@@ -84,7 +78,25 @@ public class Tournament {
         this.blind_interval = blind_interval;
     }
 
-    public Map<String, Object> toMap() {
+    public Map<String,String> getTimestamp_created() {
+        return timestamp_created;
+    }
+
+    public void setTimestamp_created(Map<String, String> timestamp_created) {
+        this.timestamp_created = timestamp_created;
+    }
+
+    private Map<String, String> timestamp_created;
+
+    public Map<String, String> getTimestamp_started() {
+        return timestamp_started;
+    }
+
+    public void setTimestamp_started(Map<String, String> timestamp_started) {
+        this.timestamp_started = timestamp_started;
+    }
+
+        public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("owner_uid", owner_uid);
         result.put("buyin", buy_in);
@@ -93,7 +105,7 @@ public class Tournament {
         result.put("starting_chips", starting_chips);
         result.put("blind_interval", blind_interval);
         result.put("last_rebuy_level", last_rebuy_level);
-        result.put("timestamp", ServerValue.TIMESTAMP);
+        result.put("timestamp_created", ServerValue.TIMESTAMP);
         return result;
     }
 }

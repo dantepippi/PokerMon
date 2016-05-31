@@ -1,7 +1,9 @@
 package com.dstudios.pokermon;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -30,22 +32,34 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = "Main";
+    private static final String TAG = "MainActivity";
+    private SharedPreferences mSharedPreferences;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mDatabaseRef;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        FirebaseApp app = FirebaseApp.getInstance();
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference databaseRef = database.getReference();
-        final DatabaseReference tournRef = databaseRef.child("tournaments");
 
-        FirebaseUser usr = getFirebaseUser();
-        if (usr != null) {
-            final String userId = usr.getUid();
-            databaseRef.child("users").child(userId).addListenerForSingleValueEvent(
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        //Initialize firebase variables
+
+        mDatabase = FirebaseDatabase.getInstance();
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        mDatabaseRef = mDatabase.getReference();
+
+
+        if (mFirebaseUser != null) {
+            final String userId = mFirebaseUser.getUid();
+            mDatabaseRef.child("users").child(userId).addListenerForSingleValueEvent(
                     new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -62,10 +76,10 @@ public class MainActivity extends AppCompatActivity
         }
         else {
             startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
         }
         setSupportActionBar(toolbar);
-
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -73,10 +87,10 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Tournament tournament = new Tournament();
                 Map<String, String> timestamp = ServerValue.TIMESTAMP;
-                tournament.setCreated(timestamp);
+                tournament.setTimestamp_created(timestamp);
                 String firebaseUserUid = getFirebaseUserUid();
                 tournament.setOwner_uid(firebaseUserUid);
-                DatabaseReference tournChild = tournRef.child(firebaseUserUid);
+                DatabaseReference tournChild = mDatabaseRef.child("tournaments").child(firebaseUserUid);
                 String key = tournChild.push().getKey();
                 Map<String, Object> stringObjectMap = tournament.toMap();
                 tournChild.child(key).updateChildren(stringObjectMap);
@@ -101,7 +115,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private FirebaseUser getFirebaseUser() {
-        return FirebaseAuth.getInstance().getCurrentUser();
+        return mFirebaseAuth.getCurrentUser();
     }
 
     @Override
@@ -130,7 +144,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_signout) {
-            FirebaseAuth.getInstance().signOut();
+            mFirebaseAuth.signOut();
             startActivity(new Intent(this, LoginActivity.class));
             return true;
         }
@@ -148,9 +162,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_history) {
 
-        } else if (id == R.id.nav_manage) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
+        } else if (id == R.id.nav_structure) {
+            startActivity(new Intent(this, StructureActivity.class));
 
         } else if (id == R.id.nav_share) {
 

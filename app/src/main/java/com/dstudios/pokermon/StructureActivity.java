@@ -1,92 +1,112 @@
-//package com.dstudios.pokermon;
-//
-//import android.app.ListActivity;
-//import android.database.Cursor;
-//import android.os.Bundle;
-//import android.view.ContextMenu;
-//import android.view.ContextMenu.ContextMenuInfo;
-//import android.view.Menu;
-//import android.view.View;
-//import android.view.View.OnClickListener;
-//import android.widget.AdapterView.AdapterContextMenuInfo;
-//import android.widget.Button;
-//import android.widget.EditText;
-//import android.widget.ListView;
-//import android.widget.SimpleCursorAdapter;
-//
-//public class StructureActivity extends ListActivity {
-//	private EditText filterText = null;
-//	SimpleCursorAdapter torneios;
-//	Cursor niveis;
-//	int qtdNiveis;
-//	//Tournament torneioSelecionado;
-//	//DbAdapterStructure dbAdapter;
-//	//DbAdapterTournaments dbAdapterTournament;
-//
-//	@Override
-//	protected void onCreate(Bundle savedInstanceState) {
-//		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_structure);
-//
-//		//dbAdapter = new DbAdapterStructure(this);
-//		//dbAdapterTournament = new DbAdapterTournaments(this);
-//		Bundle extras = getIntent().getExtras();
-//		//torneioSelecionado = dbAdapterTournament.consultaTorneioPorId(extras
-//		//		.getLong("torneio_selecionado"));
-//		//fillData();
-//		Button button = (Button) findViewById(R.id.add_nivel);
-//		button.setOnClickListener(mAddNivelListener);
-//		// button = (Button) findViewById(R.id.delete_round);
-//		// button.setOnClickListener(mDeleteNivelListener);
-//
-//	}
-//
-//	View.OnClickListener mDeleteNivelListener = new OnClickListener() {
-//		public void onClick(View v) {
-//
-//			// dbAdapter.deleteNivel());
-//			fillData();
-//		}
-//
-//	};
-//	View.OnClickListener mAddNivelListener = new OnClickListener() {
-//		public void onClick(View v) {
-//			qtdNiveis++;
-//			dbAdapter.insereNivel(qtdNiveis, 0, 0, 0,
-//					Integer.valueOf(torneioSelecionado.getDuracaoPadrao()),
-//					DbAdapterStructure.NORMAL, torneioSelecionado.getId());
-//			fillData();
-//		}
-//
-//	};
-//
-//	private void fillData() {
-//		niveis = dbAdapter.consultaTournamentStructure(torneioSelecionado
-//				.getId());
-//		qtdNiveis = niveis.getCount();
-//		String[] from = new String[] { "nivel", "small", "big", "ante", "time" };
-//		int[] to = new int[] { R.id.nivel, R.id.edit_SB, R.id.edit_BB,
-//				R.id.edit_Ante, R.id.edit_time };
-//
-//		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-//				R.layout.structure_row, niveis, from, to, 0);
-//		ListView listView = getListView();
-//		listView.setAdapter(adapter);
-//	}
-//
-//	@Override
-//	public void onCreateContextMenu(ContextMenu menu, View v,
-//			ContextMenuInfo menuInfo) {
-//		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
-//		niveis.moveToPosition(info.position);
-//		menu.setHeaderTitle(niveis.getString(1));
-//		menu.add(Menu.NONE, 1, 1, "Delete");
-//	}
-//
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		getMenuInflater().inflate(R.menu.menu_structure, menu);
-//		return true;
-//	}
-//
-//}
+package com.dstudios.pokermon;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+public class StructureActivity extends AppCompatActivity {
+    private RecyclerView mStructureRecyclerView;
+    private LinearLayoutManager mLinearLayoutManager;
+    private DatabaseReference mFirebaseDatabaseReference;
+    private FirebaseRecyclerAdapter<Level, StructureViewHolder> mFirebaseAdapter;
+    private ProgressBar mProgressBar;
+    private Button mSendButton;
+    public static final String STRUCTURE_CHILD = "structure";
+    private EditText mEditSB;
+    private EditText mEditBB;
+
+    public static class StructureViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public TextView textSB;
+        public TextView textBB;
+        public TextView textLevel;
+
+        public StructureViewHolder(View v) {
+            super(v);
+            textSB = (TextView) itemView.findViewById(R.id.textSB);
+            textBB = (TextView) itemView.findViewById(R.id.textBB);
+            textLevel = (TextView) itemView.findViewById(R.id.text_level);
+            v.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+
+
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_structure);
+
+        FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+        mStructureRecyclerView = (RecyclerView) findViewById(R.id.structureRecyclerView);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mLinearLayoutManager.setStackFromEnd(true);
+
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<Level, StructureViewHolder>(
+                Level.class,
+                R.layout.item_structure,
+                StructureViewHolder.class,
+                mFirebaseDatabaseReference.child(STRUCTURE_CHILD).child(mFirebaseUser.getUid())) {
+
+            @Override
+            protected void populateViewHolder(StructureViewHolder viewHolder, Level level, int position) {
+                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                viewHolder.textSB.setText(Integer.toString(level.getSmall_blind()));
+                viewHolder.textBB.setText(Integer.toString(level.getBig_blind()));
+                viewHolder.textLevel.setText(" " + Integer.toString(position+1) + " ");
+            }
+
+
+        };
+        mFirebaseAdapter.setHasStableIds(true);
+        mStructureRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mStructureRecyclerView.setAdapter(mFirebaseAdapter);
+        mEditSB = (EditText) findViewById(R.id.edit_sb);
+        mEditBB = (EditText) findViewById(R.id.edit_bb);
+        mSendButton = (Button) findViewById(R.id.sendButton);
+        mSendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Level level = new Level();
+                level.setSmall_blind(new Integer(mEditSB.getText().toString()));
+                level.setBig_blind(new Integer(mEditBB.getText().toString()));
+                mFirebaseDatabaseReference.child(STRUCTURE_CHILD).child(mFirebaseUser.getUid()).push().setValue(level);
+            }
+        });
+        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                int levelCount = mFirebaseAdapter.getItemCount();
+                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+                // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
+                // to the bottom of the list to show the newly added message.
+                if (lastVisiblePosition == -1 ||
+                        (positionStart >= (levelCount - 1) && lastVisiblePosition == (positionStart - 1))) {
+                    mStructureRecyclerView.scrollToPosition(positionStart);
+                }
+            }
+        });
+
+    }
+}
