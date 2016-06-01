@@ -26,16 +26,21 @@ public class StructureActivity extends AppCompatActivity {
     public static final String STRUCTURE_CHILD = "structure";
     private EditText mEditSB;
     private EditText mEditBB;
+    private EditText mEditAnte;
+
 
     public static class StructureViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView textSB;
         public TextView textBB;
+        public TextView textAnte;
         public TextView textLevel;
+
 
         public StructureViewHolder(View v) {
             super(v);
             textSB = (TextView) itemView.findViewById(R.id.textSB);
             textBB = (TextView) itemView.findViewById(R.id.textBB);
+            textAnte = (TextView) itemView.findViewById(R.id.textAnte);
             textLevel = (TextView) itemView.findViewById(R.id.text_level);
             v.setOnClickListener(this);
         }
@@ -43,8 +48,6 @@ public class StructureActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-
-
         }
     }
 
@@ -66,23 +69,24 @@ public class StructureActivity extends AppCompatActivity {
                 Level.class,
                 R.layout.item_structure,
                 StructureViewHolder.class,
-                mFirebaseDatabaseReference.child(STRUCTURE_CHILD).child(mFirebaseUser.getUid())) {
+                mFirebaseDatabaseReference.child(STRUCTURE_CHILD).child(mFirebaseUser.getUid()).orderByChild("small_blind")) {
 
             @Override
             protected void populateViewHolder(StructureViewHolder viewHolder, Level level, int position) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 viewHolder.textSB.setText(Integer.toString(level.getSmall_blind()));
                 viewHolder.textBB.setText(Integer.toString(level.getBig_blind()));
+                viewHolder.textAnte.setText(Integer.toString(level.getAnte() != null? level.getAnte() : null));
                 viewHolder.textLevel.setText(" " + Integer.toString(position+1) + " ");
             }
-
-
         };
+
         mFirebaseAdapter.setHasStableIds(true);
         mStructureRecyclerView.setLayoutManager(mLinearLayoutManager);
         mStructureRecyclerView.setAdapter(mFirebaseAdapter);
         mEditSB = (EditText) findViewById(R.id.edit_sb);
         mEditBB = (EditText) findViewById(R.id.edit_bb);
+        mEditAnte = (EditText) findViewById(R.id.edit_ante);
         mSendButton = (Button) findViewById(R.id.sendButton);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +94,7 @@ public class StructureActivity extends AppCompatActivity {
                 Level level = new Level();
                 level.setSmall_blind(new Integer(mEditSB.getText().toString()));
                 level.setBig_blind(new Integer(mEditBB.getText().toString()));
+                level.setAnte(!"".equals(mEditAnte.getText().toString())  ? new Integer(mEditAnte.getText().toString()) : 0);
                 mFirebaseDatabaseReference.child(STRUCTURE_CHILD).child(mFirebaseUser.getUid()).push().setValue(level);
             }
         });

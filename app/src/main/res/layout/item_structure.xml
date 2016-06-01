@@ -56,6 +56,12 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:id="@+id/textBB"
                 android:layout_weight="0"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/textAnte"
+                android:layout_weight="0"/>
         </LinearLayout>
 
     </LinearLayout>
