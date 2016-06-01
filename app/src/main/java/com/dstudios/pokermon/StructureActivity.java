@@ -1,14 +1,18 @@
 package com.dstudios.pokermon;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,7 +31,6 @@ public class StructureActivity extends AppCompatActivity {
     private EditText mEditSB;
     private EditText mEditBB;
     private EditText mEditAnte;
-
 
     public static class StructureViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView textSB;
@@ -98,6 +101,16 @@ public class StructureActivity extends AppCompatActivity {
                 mFirebaseDatabaseReference.child(STRUCTURE_CHILD).child(mFirebaseUser.getUid()).push().setValue(level);
             }
         });
+        mStructureRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        mFirebaseAdapter.notifyItemRemoved(position);
+                        DatabaseReference ref = mFirebaseAdapter.getRef(position);
+                        ref.removeValue();
+                    }
+
+                })
+        );
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
