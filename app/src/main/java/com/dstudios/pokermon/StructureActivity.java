@@ -1,6 +1,8 @@
 package com.dstudios.pokermon;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,8 +33,9 @@ public class StructureActivity extends AppCompatActivity {
     private EditText mEditSB;
     private EditText mEditBB;
     private EditText mEditAnte;
+    private SharedPreferences mSharedPreference;
 
-    public static class StructureViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class StructureViewHolder extends RecyclerView.ViewHolder {
         public TextView textSB;
         public TextView textBB;
         public TextView textAnte;
@@ -45,12 +48,6 @@ public class StructureActivity extends AppCompatActivity {
             textBB = (TextView) itemView.findViewById(R.id.textBB);
             textAnte = (TextView) itemView.findViewById(R.id.textAnte);
             textLevel = (TextView) itemView.findViewById(R.id.text_level);
-            v.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            int position = getAdapterPosition();
         }
     }
 
@@ -65,9 +62,11 @@ public class StructureActivity extends AppCompatActivity {
         mStructureRecyclerView = (RecyclerView) findViewById(R.id.structureRecyclerView);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mLinearLayoutManager = new LinearLayoutManager(this);
-        mLinearLayoutManager.setStackFromEnd(true);
-
+        mLinearLayoutManager.setStackFromEnd(false);
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+
+        setPreferences();
+
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Level, StructureViewHolder>(
                 Level.class,
                 R.layout.item_structure,
@@ -101,16 +100,17 @@ public class StructureActivity extends AppCompatActivity {
                 mFirebaseDatabaseReference.child(STRUCTURE_CHILD).child(mFirebaseUser.getUid()).push().setValue(level);
             }
         });
+
         mStructureRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-                        mFirebaseAdapter.notifyItemRemoved(position);
                         DatabaseReference ref = mFirebaseAdapter.getRef(position);
                         ref.removeValue();
                     }
 
                 })
         );
+
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -127,4 +127,12 @@ public class StructureActivity extends AppCompatActivity {
         });
 
     }
+
+    private void setPreferences() {
+        mSharedPreference = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor mPrefsEditor = mSharedPreference.edit();
+        mPrefsEditor.putInt("BLIND_INTERVAL", 15);
+        mPrefsEditor.commit();
+    }
+
 }

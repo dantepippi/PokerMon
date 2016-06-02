@@ -85,16 +85,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Tournament tournament = new Tournament();
-                Map<String, String> timestamp = ServerValue.TIMESTAMP;
-                tournament.setTimestamp_created(timestamp);
-                String firebaseUserUid = getFirebaseUserUid();
-                tournament.setOwner_uid(firebaseUserUid);
-                DatabaseReference tournChild = mDatabaseRef.child("tournaments").child(firebaseUserUid);
-                String key = tournChild.push().getKey();
-                Map<String, Object> stringObjectMap = tournament.toMap();
-                tournChild.child(key).updateChildren(stringObjectMap);
-
+                startActivity(new Intent(getApplicationContext(), TournamentActivity.class));
             }
         });
 

@@ -17,7 +17,7 @@ public class Tournament {
     private String buy_in;
     private String rebuy;
     private String add_on;
-    private String last_rebuy_level;
+    private Integer last_rebuy_level;
     private Integer starting_chips;
     private Integer blind_interval;
 
@@ -54,11 +54,11 @@ public class Tournament {
         this.add_on = add_on;
     }
 
-    public String getLast_rebuy_level() {
+    public Integer getLast_rebuy_level() {
         return last_rebuy_level;
     }
 
-    public void setLast_rebuy_level(String last_rebuy_level) {
+    public void setLast_rebuy_level(Integer last_rebuy_level) {
         this.last_rebuy_level = last_rebuy_level;
     }
 
