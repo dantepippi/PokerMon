@@ -34,11 +34,12 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
     private SharedPreferences mSharedPreferences;
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference mDatabaseRef;
-    private FirebaseAuth mFirebaseAuth;
+    private static FirebaseDatabase mDatabase;
+    private static DatabaseReference mDatabaseRef;
+    private static FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private User mUser;
+    static boolean mInitialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +52,7 @@ public class MainActivity extends AppCompatActivity
 
         //Initialize firebase variables
 
-        mDatabase = FirebaseDatabase.getInstance();
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        mDatabaseRef = mDatabase.getReference();
+        initializeFirebaseRefs();
 
 
         if (mFirebaseUser != null) {
@@ -98,6 +96,16 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+    }
+
+    private void initializeFirebaseRefs() {
+            mDatabase = FirebaseDatabase.getInstance();
+            if (!mInitialized)
+                mDatabase.setPersistenceEnabled(true);
+            mFirebaseAuth = FirebaseAuth.getInstance();
+            mFirebaseUser = mFirebaseAuth.getCurrentUser();
+            mDatabaseRef = mDatabase.getReference();
+            mInitialized = true;
     }
 
     @NonNull
