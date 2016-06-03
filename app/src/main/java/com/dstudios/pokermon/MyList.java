@@ -15,6 +15,9 @@ public class MyList<E> {
         elements = new Object[DEFAULT_CAPACITY];
     }
 
+    public int getSize() {
+        return size;
+    }
     public void add(E e) {
         if (size == elements.length) {
             ensureCapa();
