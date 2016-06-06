@@ -10,19 +10,15 @@ public class Level {
     private Integer small_blind;
     private Integer big_blind;
     private Integer ante;
-    private Integer time;
-    private Boolean break_after;
-    private Boolean add_on_after;
+    private Long sum;
 
-    public String getMode() {
-        return mode;
+    public Long getSum() {
+        return sum;
     }
 
-    public void setMode(String mode) {
-        this.mode = mode;
+    public void setSum(Long sum) {
+        this.sum = sum;
     }
-
-    private String mode;
 
     public Integer getNumber() {
         return number;
@@ -56,27 +52,5 @@ public class Level {
         this.ante = ante;
     }
 
-    public Integer getTime() {
-        return time;
-    }
 
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-    public Boolean getBreak_after() {
-        return break_after;
-    }
-
-    public void setBreak_after(Boolean break_after) {
-        this.break_after = break_after;
-    }
-
-    public Boolean getAdd_on_after() {
-        return add_on_after;
-    }
-
-    public void setAdd_on_after(Boolean add_on_after) {
-        this.add_on_after = add_on_after;
-    }
 }

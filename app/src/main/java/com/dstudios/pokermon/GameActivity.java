@@ -46,7 +46,7 @@ public class GameActivity extends AppCompatActivity {
         mTxtBlinds = (TextView) findViewById(R.id.txtBlinds);
         mTxtNextBlinds = (TextView) findViewById(R.id.nextBlinds);
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mFirebaseDatabaseReference.child("structure").child(getFirebaseUserUid()).orderByChild("small_blind").addListenerForSingleValueEvent(new ValueEventListener() {
+        mFirebaseDatabaseReference.child("structure").child(getFirebaseUserUid()).child("Fast").orderByChild("sum").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot levelSnapShot : dataSnapshot.getChildren()) {
@@ -129,7 +129,7 @@ public class GameActivity extends AppCompatActivity {
     }
     private void switchToLevel(int lvl) {
         try {
-            currentLevel = mLevelsList.get(lvl-1);
+            currentLevel = nextLevel = mLevelsList.get(lvl-1);
             if (lvl < lvlCount)
                 nextLevel = mLevelsList.get(lvl);
             else

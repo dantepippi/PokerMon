@@ -34,9 +34,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
     private SharedPreferences mSharedPreferences;
-    private static FirebaseDatabase mDatabase;
-    private static DatabaseReference mDatabaseRef;
-    private static FirebaseAuth mFirebaseAuth;
+
     private FirebaseUser mFirebaseUser;
     private User mUser;
     static boolean mInitialized = false;
@@ -50,19 +48,16 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        //Initialize firebase variables
-
         initializeFirebaseRefs();
-
 
         if (mFirebaseUser != null) {
             final String userId = mFirebaseUser.getUid();
-            mDatabaseRef.child("users").child(userId).addListenerForSingleValueEvent(
+            Utils.mDatabaseRef.child("users").child(userId).addListenerForSingleValueEvent(
                     new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             User user = dataSnapshot.getValue(User.class);
-                            if (user != null)  Log.d(TAG, "Found user: " + user.getDisplayName());
+                            if (user != null) Log.d(TAG, "Found user: " + user.getDisplayName());
                         }
 
                         @Override
@@ -71,8 +66,7 @@ public class MainActivity extends AppCompatActivity
                         }
                     });
 
-        }
-        else {
+        } else {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
@@ -99,13 +93,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initializeFirebaseRefs() {
-            mDatabase = FirebaseDatabase.getInstance();
-            if (!mInitialized)
-                mDatabase.setPersistenceEnabled(true);
-            mFirebaseAuth = FirebaseAuth.getInstance();
-            mFirebaseUser = mFirebaseAuth.getCurrentUser();
-            mDatabaseRef = mDatabase.getReference();
-            mInitialized = true;
+        Utils.mDatabase = FirebaseDatabase.getInstance();
+        if (!mInitialized)
+            Utils.mDatabase.setPersistenceEnabled(true);
+        Utils.mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = Utils.mFirebaseAuth.getCurrentUser();
+        Utils.mDatabaseRef = Utils.mDatabase.getReference();
+        mInitialized = true;
     }
 
     @NonNull
@@ -114,7 +108,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private FirebaseUser getFirebaseUser() {
-        return mFirebaseAuth.getCurrentUser();
+        return Utils.mFirebaseAuth.getCurrentUser();
     }
 
     @Override
@@ -143,7 +137,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_signout) {
-            mFirebaseAuth.signOut();
+            Utils.mFirebaseAuth.signOut();
             startActivity(new Intent(this, LoginActivity.class));
             return true;
         }
@@ -160,6 +154,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_players) {
 
         } else if (id == R.id.nav_history) {
+            startActivity(new Intent(this, LevelListActivity.class));
 
         } else if (id == R.id.nav_structure) {
             startActivity(new Intent(this, StructureActivity.class));

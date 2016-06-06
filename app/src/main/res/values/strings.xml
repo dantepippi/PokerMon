@@ -106,9 +106,15 @@
     </string>
     <string name="str_blinds">Blinds: </string>
     <string name="str_level">Level: </string>
+    <string name="str_ante">Ante</string>
 
     <string name="title_activity_game">GameActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="buyin">Buy In</string>
+    <string name="rebuy">Rebuy</string>
+    <string name="addon">Addon</string>
+    <string name="title_level_list">Levels</string>
+    <string name="title_level_detail">Level Detail</string>
 </resources>
 

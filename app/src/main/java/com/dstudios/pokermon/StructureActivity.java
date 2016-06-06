@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,10 +24,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import static com.dstudios.pokermon.R.id.textSB;
+
 public class StructureActivity extends AppCompatActivity {
     private RecyclerView mStructureRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
-    private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseRecyclerAdapter<Level, StructureViewHolder> mFirebaseAdapter;
     private ProgressBar mProgressBar;
     private Button mSendButton;
@@ -58,20 +61,19 @@ public class StructureActivity extends AppCompatActivity {
 
         FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
         final FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
-
         mStructureRecyclerView = (RecyclerView) findViewById(R.id.structureRecyclerView);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(false);
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        Utils.mDatabaseRef= FirebaseDatabase.getInstance().getReference();
 
         setPreferences();
-
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Level, StructureViewHolder>(
                 Level.class,
                 R.layout.item_structure,
                 StructureViewHolder.class,
-                mFirebaseDatabaseReference.child(STRUCTURE_CHILD).child(mFirebaseUser.getUid()).orderByChild("small_blind")) {
+                Utils.mDatabaseRef.child(STRUCTURE_CHILD).child(mFirebaseUser.getUid()).child("Fast").orderByChild("sum")) {
 
             @Override
             protected void populateViewHolder(StructureViewHolder viewHolder, Level level, int position) {
@@ -82,8 +84,6 @@ public class StructureActivity extends AppCompatActivity {
                 viewHolder.textLevel.setText(" " + Integer.toString(position+1) + " ");
             }
         };
-
-        mFirebaseAdapter.setHasStableIds(true);
         mStructureRecyclerView.setLayoutManager(mLinearLayoutManager);
         mStructureRecyclerView.setAdapter(mFirebaseAdapter);
         mEditSB = (EditText) findViewById(R.id.edit_sb);
@@ -94,13 +94,18 @@ public class StructureActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Level level = new Level();
+                if ("".equals(mEditSB.getText().toString()) || "".equals(mEditBB.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "Please fill the blinds", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 level.setSmall_blind(new Integer(mEditSB.getText().toString()));
                 level.setBig_blind(new Integer(mEditBB.getText().toString()));
                 level.setAnte(!"".equals(mEditAnte.getText().toString())  ? new Integer(mEditAnte.getText().toString()) : 0);
-                mFirebaseDatabaseReference.child(STRUCTURE_CHILD).child(mFirebaseUser.getUid()).push().setValue(level);
+                level.setSum(new Long(level.getSmall_blind().toString()+level.getBig_blind()+level.getAnte()));
+                Utils.mDatabaseRef.child(STRUCTURE_CHILD).child(mFirebaseUser.getUid()).child("Fast").push().setValue(level);
             }
         });
-
+        mStructureRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext()));
         mStructureRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinator_layout_game"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="4dip" >
+    android:padding="4dip">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/txtContador"
-            android:textColor="#E6E6E6"
-            android:textSize="80sp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#E6E6E6"
+            android:textSize="80sp" />
 
         <TextView
             android:id="@+id/txtInicio"
@@ -29,52 +29,54 @@
 
         <TextView
             android:id="@+id/txtNivel"
-            android:textColor="#E6E6E6"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="#E6E6E6" />
+
         <TextView
             android:id="@+id/txtBlinds"
-            android:textColor="#E6E6E6"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textSize="40sp"/>
+            android:textColor="#E6E6E6"
+            android:textSize="40sp" />
+
         <TextView
             android:id="@+id/nextBlinds"
-            android:textColor="#E6E6E6"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"/>
+            android:textColor="#E6E6E6"
+            android:textSize="20sp" />
 
-
-        <Button
-            android:id="@+id/start"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="PLAY">
+            android:orientation="horizontal">
 
-            <requestFocus />
-        </Button>
+            <Button
+                android:id="@+id/start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PLAY">
+                <requestFocus />
+            </Button>
 
-        <Button
-            android:id="@+id/reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reset level" >
-        </Button>
+            <Button
+                android:id="@+id/reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reset level"></Button>
 
-        <Button
-            android:id="@+id/skip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Skip level" >
-        </Button>
-        <Button
-            android:id="@+id/timer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Timer" >
-        </Button>
+            <Button
+                android:id="@+id/skip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Skip level"></Button>
 
-
+            <Button
+                android:id="@+id/timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Players"></Button>
+        </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

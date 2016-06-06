@@ -2,20 +2,31 @@ package com.dstudios.pokermon;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.DataSetObserver;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsSpinner;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import com.firebase.ui.FirebaseUI;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static com.dstudios.pokermon.R.string.level;
@@ -23,18 +34,47 @@ import static com.dstudios.pokermon.StructureActivity.STRUCTURE_CHILD;
 
 public class TournamentActivity extends AppCompatActivity {
 
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference mDatabaseRef;
     SharedPreferences mSharedPreferences;
+    private Spinner mClassSpinner;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mClassSpinner.setSelection(0);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tournament);
-        mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = mDatabase.getReference();
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mClassSpinner = (Spinner) findViewById(R.id.spinner_structure);
 
+
+        DatabaseReference structuresRef = Utils.mDatabaseRef.child(Utils.STRUCTURE).child(getFirebaseUserUid());
+        structuresRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayAdapter<String> adapter;
+                List<String> listStructure;
+                listStructure = new ArrayList<String>();
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    listStructure.add(data.getKey());
+                }
+
+                adapter = new ArrayAdapter<String>(getApplicationContext(),
+                        android.R.layout.simple_spinner_item, listStructure);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                Spinner mSpinner = (Spinner) findViewById(R.id.spinner_structure);
+                mSpinner.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         Button btAdd = (Button) findViewById(R.id.addButton);
         final EditText buyin = (EditText) findViewById(R.id.buyin);
@@ -56,7 +96,7 @@ public class TournamentActivity extends AppCompatActivity {
                 tournament.setLast_rebuy_level(new Integer(lastRebuyLevel.getText().toString()));
                 tournament.setBlind_interval(mSharedPreferences.getInt("BLIND_INTERVAL", 10));
 
-                DatabaseReference tournChild = mDatabaseRef.child("tournaments").child(firebaseUserUid);
+                DatabaseReference tournChild = Utils.mDatabaseRef.child(Utils.TOURNAMENTS).child(firebaseUserUid);
                 String key = tournChild.push().getKey();
                 Map<String, Object> stringObjectMap = tournament.toMap();
                 tournChild.child(key).updateChildren(stringObjectMap);

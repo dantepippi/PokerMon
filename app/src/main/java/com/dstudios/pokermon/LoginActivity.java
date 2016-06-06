@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.ArraySet;
 import android.util.Log;
 
 import com.firebase.ui.auth.AuthUI;
@@ -12,17 +13,18 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
 // TODO checar utilização dos metodos de login na MainActiviy
 public class LoginActivity extends AppCompatActivity {
-    private FirebaseAuth auth;
     FirebaseAuth.AuthStateListener mAuthListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        auth = FirebaseAuth.getInstance();
+        Utils.mFirebaseAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -68,14 +70,15 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        auth.addAuthStateListener(mAuthListener);
+        Utils.mFirebaseAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (auth != null) {
-            auth.removeAuthStateListener(mAuthListener);
+        if (Utils.mFirebaseAuth != null) {
+            Utils.mFirebaseAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
 }
