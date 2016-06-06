@@ -22,7 +22,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?attr/textAppearanceListItem"
                 android:id="@+id/str_level"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?attr/textAppearanceListItem"
                 android:id="@+id/text_level"
                 android:layout_weight="0"/>
             <TextView
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?attr/textAppearanceListItem"
                 android:id="@+id/text_blinds"
                 android:text="@string/str_blinds"
                 android:layout_weight="0"/>
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?attr/textAppearanceListItem"
                 android:id="@+id/textSB"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="0"/>
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?attr/textAppearanceListItem"
                 android:id="@+id/text_slash"
                 android:text=" / "
                 android:layout_weight="0"/>
@@ -69,14 +69,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?attr/textAppearanceListItem"
                 android:id="@+id/textBB"
                 android:layout_weight="0"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?attr/textAppearanceListItem"
                 android:id="@+id/strAnte"
                 android:text="@string/str_ante"
                 android:layout_marginBottom="5dp"
@@ -86,7 +86,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?attr/textAppearanceListItem"
                 android:id="@+id/textAnte"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
