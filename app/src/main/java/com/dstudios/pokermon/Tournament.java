@@ -1,5 +1,6 @@
 package com.dstudios.pokermon;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.firebase.database.ServerValue;
 
 import java.util.HashMap;
@@ -11,8 +12,10 @@ import java.util.Map;
 
 public class Tournament {
 
-    private Map<String, String> timestamp_started;
-    private Map<String, String> timestamp_finished;
+    private Long timestamp_created;
+    private Long timestamp_started;
+    private Long timestamp_finished;
+    private String structure;
     private String owner_uid;
     private String buy_in;
     private String rebuy;
@@ -21,6 +24,13 @@ public class Tournament {
     private Integer starting_chips;
     private Integer blind_interval;
 
+    public String getStructure() {
+        return structure;
+    }
+
+    public void setStructure(String structure) {
+        this.structure = structure;
+    }
 
     public String getOwner_uid() {
         return owner_uid;
@@ -78,25 +88,34 @@ public class Tournament {
         this.blind_interval = blind_interval;
     }
 
-    public Map<String,String> getTimestamp_created() {
-        return timestamp_created;
+
+    public Map<String, String> getTimestamp_created() {
+        return ServerValue.TIMESTAMP;
     }
 
-    public void setTimestamp_created(Map<String, String> timestamp_created) {
+    @JsonIgnore
+    public Long getTimestamp_createdLong() {
+        return this.timestamp_created;
+    }
+
+    public void setTimestamp_created(Long timestamp_created) {
         this.timestamp_created = timestamp_created;
     }
 
-    private Map<String, String> timestamp_created;
+
+
+    @JsonIgnore
+    public Long getTimestamp_startedLong() { return this.timestamp_started;}
 
     public Map<String, String> getTimestamp_started() {
-        return timestamp_started;
+        return ServerValue.TIMESTAMP;
     }
 
-    public void setTimestamp_started(Map<String, String> timestamp_started) {
+    public void setTimestamp_started(Long timestamp_started) {
         this.timestamp_started = timestamp_started;
     }
 
-        public Map<String, Object> toMap() {
+    public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("owner_uid", owner_uid);
         result.put("buyin", buy_in);
@@ -106,6 +125,7 @@ public class Tournament {
         result.put("blind_interval", blind_interval);
         result.put("last_rebuy_level", last_rebuy_level);
         result.put("timestamp_created", ServerValue.TIMESTAMP);
+        result.put("structure", structure);
         return result;
     }
 }

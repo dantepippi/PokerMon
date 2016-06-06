@@ -17,17 +17,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity
@@ -37,7 +32,7 @@ public class MainActivity extends AppCompatActivity
 
     private FirebaseUser mFirebaseUser;
     private User mUser;
-    static boolean mInitialized = false;
+    private static boolean mInitialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +149,6 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_players) {
 
         } else if (id == R.id.nav_history) {
-            startActivity(new Intent(this, LevelListActivity.class));
 
         } else if (id == R.id.nav_structure) {
             startActivity(new Intent(this, StructureActivity.class));

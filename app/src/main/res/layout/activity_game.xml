@@ -56,7 +56,7 @@
                 android:id="@+id/start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PLAY">
+                android:text="@string/play">
                 <requestFocus />
             </Button>
 
@@ -64,19 +64,22 @@
                 android:id="@+id/reset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reset level"></Button>
+                android:text="Reset level">
+            </Button>
 
             <Button
                 android:id="@+id/skip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Skip level"></Button>
+                android:text="Skip level">
+            </Button>
 
             <Button
                 android:id="@+id/timer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Players"></Button>
+                android:text="Players">
+            </Button>
         </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

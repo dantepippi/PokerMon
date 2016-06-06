@@ -89,6 +89,8 @@
     <string name="title_activity_struct">StructActivity</string>
     <string name="small_blind">Small Blind</string>
     <string name="level">Level</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
     <string name="big_blind">Big Blind</string>
     <string name="title_activity_login">Sign in</string>
 
@@ -102,10 +104,9 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
-    <string name="str_blinds">Blinds: </string>
-    <string name="str_level">Level: </string>
+        completions."</string>
+    <string name="level_not_found">Level info not found</string>
+    <string name="str_blinds">Blinds</string>
     <string name="str_ante">Ante</string>
 
     <string name="title_activity_game">GameActivity</string>
@@ -116,5 +117,6 @@
     <string name="addon">Addon</string>
     <string name="title_level_list">Levels</string>
     <string name="title_level_detail">Level Detail</string>
+    <string name="next_level">Next level</string>
 </resources>
 

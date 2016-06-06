@@ -18,16 +18,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class GameActivity extends AppCompatActivity {
-    Boolean statusPaused;
+    private Boolean statusPaused;
     private DatabaseReference mFirebaseDatabaseReference;
-    MyList<Level> mLevelsList;
-    Level currentLevel, nextLevel;
+    private MyList<Level> mLevelsList;
+    private Level currentLevel, nextLevel;
     private int levelNumber = 1, lvlCount = 1, millisLeft = 0;
     private TextView mTxtNivel, mTxtBlinds, mTextContador, mTxtNextBlinds;
     private int blindInterval;
     private Button mBtSkip, mBtReset, mBtPlayPause;
     private CountDownTimer mCountDown;
-    ViewGroup mViewGroup;
+    private ViewGroup mViewGroup;
+    private Tournament mTournament;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +36,38 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         statusPaused = true;
 
+        String tournamentKey = getIntent().getStringExtra(Utils.TOURNAMENT_KEY);
+        Utils.mDatabaseRef.child(Utils.TOURNAMENTS).child(getFirebaseUserUid()).child(tournamentKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mTournament = dataSnapshot.getValue(Tournament.class);
+                mFirebaseDatabaseReference.child(Utils.STRUCTURE).child(getFirebaseUserUid()).child(mTournament.getStructure()).orderByChild("sum").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot levelSnapShot : dataSnapshot.getChildren()) {
+                            Level lvl = levelSnapShot.getValue(Level.class);
+                            lvl.setNumber(lvlCount);
+                            lvlCount++;
+                            mLevelsList.add(lvl);
+
+                        }
+                        switchToLevel(1);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         blindInterval = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("BLIND_INTERVAL", 10);
-        mLevelsList = new MyList<Level>();
+        mLevelsList = new MyList<>();
         mBtPlayPause = (Button) findViewById(R.id.start);
         mBtSkip = (Button) findViewById(R.id.skip);
         mBtReset = (Button) findViewById(R.id.reset);
@@ -46,24 +77,7 @@ public class GameActivity extends AppCompatActivity {
         mTxtBlinds = (TextView) findViewById(R.id.txtBlinds);
         mTxtNextBlinds = (TextView) findViewById(R.id.nextBlinds);
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mFirebaseDatabaseReference.child("structure").child(getFirebaseUserUid()).child("Fast").orderByChild("sum").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot levelSnapShot : dataSnapshot.getChildren()) {
-                    Level lvl = levelSnapShot.getValue(Level.class);
-                    lvl.setNumber(lvlCount);
-                    lvlCount++;
-                    mLevelsList.add(lvl);
 
-                }
-                switchToLevel(1);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
         mBtReset.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,10 +97,10 @@ public class GameActivity extends AppCompatActivity {
             public void onClick(View v) {
                 statusPaused = !statusPaused;
                 if (statusPaused) {
-                    mBtPlayPause.setText("PLAY");
+                    mBtPlayPause.setText(getResources().getText(R.string.play));
                 }
                 else {
-                    mBtPlayPause.setText("PAUSE");
+                    mBtPlayPause.setText(getResources().getText(R.string.pause));
                     if (mCountDown == null) {
                         mCountDown = new CountDownTimer(1000000000, 1000) {
 
@@ -135,16 +149,16 @@ public class GameActivity extends AppCompatActivity {
             else
                 nextLevel = currentLevel;
         } catch (IndexOutOfBoundsException e) {
-            Snackbar mySnackBar = Snackbar.make(mViewGroup, "Level info not found", Snackbar.LENGTH_SHORT);
+            Snackbar mySnackBar = Snackbar.make(mViewGroup, getResources().getText(R.string.level_not_found), Snackbar.LENGTH_SHORT);
             mySnackBar.show();
         }
         updateInfo();
     }
 
     private void updateInfo() {
-        mTxtNivel.setText("Level " + currentLevel.getNumber().toString());
-        mTxtBlinds.setText("Blinds "+ currentLevel.getSmall_blind()+"/" + currentLevel.getBig_blind());
-        mTxtNextBlinds.setText("Next level "+ nextLevel.getSmall_blind()+"/" + nextLevel.getBig_blind());
+        mTxtNivel.setText(getResources().getText(R.string.level) + " " + currentLevel.getNumber().toString());
+        mTxtBlinds.setText(getResources().getText(R.string.str_blinds) + " "+ currentLevel.getSmall_blind()+"/" + currentLevel.getBig_blind());
+        mTxtNextBlinds.setText(getResources().getText(R.string.next_level) + " "+ nextLevel.getSmall_blind()+"/" + nextLevel.getBig_blind());
         mTextContador.setText(blindInterval + ":00");
         setMillisLeftWithBlindInterval();
     }
@@ -153,7 +167,7 @@ public class GameActivity extends AppCompatActivity {
         millisLeft = blindInterval * 60 * 1000;
     }
 
-    public String formataTempo(long millis) {
+    private String formataTempo(long millis) {
         String output;
         long seconds = millis / 1000;
         long minutes = seconds / 60;

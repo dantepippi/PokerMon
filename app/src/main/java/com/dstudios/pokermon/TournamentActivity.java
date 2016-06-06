@@ -2,35 +2,25 @@ package com.dstudios.pokermon;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.DataSetObserver;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsSpinner;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 
-import com.firebase.ui.FirebaseUI;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static com.dstudios.pokermon.R.string.level;
-import static com.dstudios.pokermon.StructureActivity.STRUCTURE_CHILD;
 
 public class TournamentActivity extends AppCompatActivity {
 
@@ -58,7 +48,7 @@ public class TournamentActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayAdapter<String> adapter;
                 List<String> listStructure;
-                listStructure = new ArrayList<String>();
+                listStructure = new ArrayList<>();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     listStructure.add(data.getKey());
                 }
@@ -86,8 +76,6 @@ public class TournamentActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Tournament tournament = new Tournament();
                 String firebaseUserUid = getFirebaseUserUid();
-                Map<String, String> timestamp = ServerValue.TIMESTAMP;
-                tournament.setTimestamp_created(timestamp);
                 tournament.setOwner_uid(firebaseUserUid);
                 tournament.setLast_rebuy_level(new Integer(lastRebuyLevel.getText().toString()));
                 tournament.setBuy_in(buyin.getText().toString());
@@ -95,14 +83,13 @@ public class TournamentActivity extends AppCompatActivity {
                 tournament.setRebuy(rebuy.getText().toString());
                 tournament.setLast_rebuy_level(new Integer(lastRebuyLevel.getText().toString()));
                 tournament.setBlind_interval(mSharedPreferences.getInt("BLIND_INTERVAL", 10));
-
+                tournament.setStructure(mClassSpinner.getSelectedItem().toString());
                 DatabaseReference tournChild = Utils.mDatabaseRef.child(Utils.TOURNAMENTS).child(firebaseUserUid);
                 String key = tournChild.push().getKey();
                 Map<String, Object> stringObjectMap = tournament.toMap();
                 tournChild.child(key).updateChildren(stringObjectMap);
-                startActivity(new Intent(getApplicationContext(), GameActivity.class));
+                startActivity(new Intent(getApplicationContext(), GameActivity.class).putExtra(Utils.TOURNAMENT_KEY, key));
                 finish();
-                return;
             }
         });
 

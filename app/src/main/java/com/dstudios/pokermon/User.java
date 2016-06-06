@@ -1,58 +1,54 @@
 package com.dstudios.pokermon;
 
-import com.google.firebase.auth.FirebaseUser;
-
 /**
  * Created by dante on 29/05/2016.
  */
-public class User {
+class User {
     private String displayName;
     private String email;
     private String uid;
 
-    public Boolean isAnonymous() {
+    Boolean isAnonymous() {
         return anonymous;
     }
 
-    public void setAnonymous(Boolean anonymous) {
+    void setAnonymous(Boolean anonymous) {
         this.anonymous = anonymous;
     }
 
     private Boolean anonymous;
 
-    public User() {
+    User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String displayName, String email, String uid) {
+    User(String displayName, String email, String uid) {
         this.displayName= displayName;
         this.setEmail(email);
         this.setUid(uid);
     }
 
-    public String getDisplayName() {
+    String getDisplayName() {
         return displayName;
     }
 
-    public void setDisplayName(String displayName) {
+    void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 
-    public String getEmail() {
+    String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    void setEmail(String email) {
         this.email = email;
     }
 
-    public String getUid() {
+    String getUid() {
         return uid;
     }
 
-    public void setUid(String uid) {
+    void setUid(String uid) {
         this.uid = uid;
     }
-
-
 }
