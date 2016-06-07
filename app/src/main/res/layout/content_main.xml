@@ -2,21 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity=""
+    android:gravity="top"
     android:orientation="vertical"
     android:padding="4dip" >
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/tournamentRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="#ECEFF1" />
 
-    <Button
-        android:id="@+id/add_tournament"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_tournament" >
-    </Button>
+
 
 </LinearLayout>

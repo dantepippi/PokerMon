@@ -103,8 +103,6 @@ public class Tournament {
         this.timestamp_created = timestamp_created;
     }
 
-
-
     @JsonIgnore
     public Long getTimestamp_startedLong() { return this.timestamp_started;}
 

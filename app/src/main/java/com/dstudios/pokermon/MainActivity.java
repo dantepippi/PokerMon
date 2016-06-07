@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
 
         public TournamentViewHolder(View v) {
             super(v);
-            textName = (TextView) itemView.findViewById(R.id.tournament_name);
+            textName = (TextView) itemView.findViewById(R.id.item_tournament_name);
         }
     }
 
