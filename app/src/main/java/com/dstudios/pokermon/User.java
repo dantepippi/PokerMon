@@ -3,52 +3,52 @@ package com.dstudios.pokermon;
 /**
  * Created by dante on 29/05/2016.
  */
-class User {
+public class User {
     private String displayName;
     private String email;
     private String uid;
 
-    Boolean isAnonymous() {
+    public Boolean isAnonymous() {
         return anonymous;
     }
 
-    void setAnonymous(Boolean anonymous) {
+    public void setAnonymous(Boolean anonymous) {
         this.anonymous = anonymous;
     }
 
     private Boolean anonymous;
 
-    User() {
+    public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    User(String displayName, String email, String uid) {
+    public User(String displayName, String email, String uid) {
         this.displayName= displayName;
         this.setEmail(email);
         this.setUid(uid);
     }
 
-    String getDisplayName() {
+    public String getDisplayName() {
         return displayName;
     }
 
-    void setDisplayName(String displayName) {
+    public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 
-    String getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    void setEmail(String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    String getUid() {
+    public String getUid() {
         return uid;
     }
 
-    void setUid(String uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 }
