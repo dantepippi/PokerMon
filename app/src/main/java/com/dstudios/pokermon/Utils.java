@@ -9,7 +9,7 @@ import com.google.firebase.database.FirebaseDatabase;
  */
 public class Utils {
     public static final String TOURNAMENTS = "tournaments";
-    public final static String TOURNAMENT_KEY = "com.dstudios.pokermon.TOURNAMENT_KEY";
+    public static final String TOURNAMENT_KEY = "com.dstudios.pokermon.TOURNAMENT_KEY";
     public static final String STRUCTURE = "structure";
     public static FirebaseAuth mFirebaseAuth;
     public static FirebaseDatabase mDatabase;

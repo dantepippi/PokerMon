@@ -65,7 +65,7 @@ public class StructureActivity extends AppCompatActivity {
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(false);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        Utils.mDatabaseRef= FirebaseDatabase.getInstance().getReference();
+        Utils.mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
         setPreferences();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Level, StructureViewHolder>(
@@ -79,8 +79,8 @@ public class StructureActivity extends AppCompatActivity {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 viewHolder.textSB.setText(Integer.toString(level.getSmall_blind()));
                 viewHolder.textBB.setText(Integer.toString(level.getBig_blind()));
-                viewHolder.textAnte.setText(Integer.toString(level.getAnte() != null? level.getAnte() : null));
-                viewHolder.textLevel.setText(" " + Integer.toString(position+1) + " ");
+                viewHolder.textAnte.setText(Integer.toString(level.getAnte() != null ? level.getAnte() : null));
+                viewHolder.textLevel.setText(" " + Integer.toString(position + 1) + " ");
             }
         };
         mStructureRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -99,15 +99,16 @@ public class StructureActivity extends AppCompatActivity {
                 }
                 level.setSmall_blind(new Integer(mEditSB.getText().toString()));
                 level.setBig_blind(new Integer(mEditBB.getText().toString()));
-                level.setAnte(!"".equals(mEditAnte.getText().toString())  ? new Integer(mEditAnte.getText().toString()) : 0);
-                level.setSum(new Long(level.getSmall_blind().toString()+level.getBig_blind()+level.getAnte()));
+                level.setAnte(!"".equals(mEditAnte.getText().toString()) ? new Integer(mEditAnte.getText().toString()) : 0);
+                level.setSum(new Long(level.getSmall_blind().toString() + level.getBig_blind() + level.getAnte()));
                 Utils.mDatabaseRef.child(Utils.STRUCTURE).child(mFirebaseUser.getUid()).child("Fast").push().setValue(level);
             }
         });
         mStructureRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext()));
         mStructureRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
+                    @Override
+                    public void onItemClick(View view, int position) {
                         DatabaseReference ref = mFirebaseAdapter.getRef(position);
                         ref.removeValue();
                     }
@@ -118,15 +119,17 @@ public class StructureActivity extends AppCompatActivity {
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                int levelCount = mFirebaseAdapter.getItemCount();
-                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
-                // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
-                // to the bottom of the list to show the newly added message.
-                if (lastVisiblePosition == -1 ||
-                        (positionStart >= (levelCount - 1) && lastVisiblePosition == (positionStart - 1))) {
-                    mStructureRecyclerView.scrollToPosition(positionStart);
-                }
+//                super.onItemRangeInserted(positionStart, itemCount);
+//                int levelCount = mFirebaseAdapter.getItemCount();
+//                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+//                // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
+//                // to the bottom of the list to show the newly added message.
+//                if (lastVisiblePosition == -1 ||
+//                        (positionStart >= (levelCount - 1) && lastVisiblePosition == (positionStart - 1))) {
+//                    mStructureRecyclerView.scrollToPosition(positionStart);
+//                }
+                mStructureRecyclerView.scrollToPosition(positionStart);
+
             }
         });
 

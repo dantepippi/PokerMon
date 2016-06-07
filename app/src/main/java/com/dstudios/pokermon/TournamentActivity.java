@@ -80,16 +80,19 @@ public class TournamentActivity extends AppCompatActivity {
                 tournament.setName(name.getText().toString());
                 tournament.setOwner_uid(firebaseUserUid);
                 tournament.setLast_rebuy_level(new Integer(lastRebuyLevel.getText().toString()));
-                tournament.setBuy_in(buyin.getText().toString());
-                tournament.setAdd_on(addOn.getText().toString());
+                tournament.setBuyIn(buyin.getText().toString());
+                tournament.setAddon(addOn.getText().toString());
                 tournament.setRebuy(rebuy.getText().toString());
                 tournament.setLast_rebuy_level(new Integer(lastRebuyLevel.getText().toString()));
                 tournament.setBlind_interval(mSharedPreferences.getInt("BLIND_INTERVAL", 10));
                 tournament.setStructure(mClassSpinner.getSelectedItem().toString());
                 DatabaseReference tournChild = Utils.mDatabaseRef.child(Utils.TOURNAMENTS).child(firebaseUserUid);
-                String key = tournChild.push().getKey();
-                Map<String, Object> stringObjectMap = tournament.toMap();
-                tournChild.child(key).updateChildren(stringObjectMap);
+                DatabaseReference pushedTournament = tournChild.push();
+                String key = pushedTournament.getKey();
+                pushedTournament.setValue(tournament);
+                pushedTournament.child("timestamp_created").setValue(ServerValue.TIMESTAMP);
+                //Map<String, Object> stringObjectMap = tournament.toMap();
+                //tournChild.child(key).updateChildren(stringObjectMap);
                 startActivity(new Intent(getApplicationContext(), GameActivity.class).putExtra(Utils.TOURNAMENT_KEY, key));
                 finish();
             }

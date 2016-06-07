@@ -1,10 +1,7 @@
 package com.dstudios.pokermon;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -15,20 +12,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -36,8 +33,6 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
-    private SharedPreferences mSharedPreferences;
-
     private FirebaseUser mFirebaseUser;
     private User mUser;
     private static boolean mInitialized = false;
@@ -61,7 +56,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -69,20 +63,17 @@ public class MainActivity extends AppCompatActivity
 
         if (mFirebaseUser != null) {
             final String userId = mFirebaseUser.getUid();
-            Utils.mDatabaseRef.child("users").child(userId).addListenerForSingleValueEvent(
-                    new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            User user = dataSnapshot.getValue(User.class);
-                            if (user != null) Log.d(TAG, "Found user: " + user.getDisplayName());
-                        }
+            mFirebaseAdapter = new FirebaseRecyclerAdapter<Tournament, TournamentViewHolder>(
+                    Tournament.class,
+                    R.layout.item_tournament,
+                    TournamentViewHolder.class,
+                    Utils.mDatabaseRef.child(Utils.TOURNAMENTS).child(mFirebaseUser.getUid())) {
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.w(TAG, "getUser:onCancelled", databaseError.toException());
-                        }
-                    });
-
+                @Override
+                protected void populateViewHolder(TournamentViewHolder viewHolder, Tournament tournament, int position) {
+                    viewHolder.textName.setText(tournament.getName());
+                }
+            };
         } else {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
@@ -103,17 +94,7 @@ public class MainActivity extends AppCompatActivity
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mTournamentRecyclerView = (RecyclerView) findViewById(R.id.tournamentRecyclerView);
 
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<Tournament, TournamentViewHolder>(
-                Tournament.class,
-                R.layout.item_tournament,
-                TournamentViewHolder.class,
-                Utils.mDatabaseRef.child(Utils.TOURNAMENTS).child(mFirebaseUser.getUid()).orderByChild("timestamp_created")) {
 
-            @Override
-            protected void populateViewHolder(TournamentViewHolder viewHolder, Tournament tournament, int position) {
-                viewHolder.textName.setText(tournament.getName());
-            }
-        };
         mTournamentRecyclerView.setAdapter(mFirebaseAdapter);
         mTournamentRecyclerView.setLayoutManager(mLinearLayoutManager);
         DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -125,6 +106,15 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        mTournamentRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        DatabaseReference ref = mFirebaseAdapter.getRef(position);
+                        ref.removeValue();
+                    }
+                })
+        );
     }
 
     private void initializeFirebaseRefs() {
@@ -135,15 +125,7 @@ public class MainActivity extends AppCompatActivity
         mFirebaseUser = Utils.mFirebaseAuth.getCurrentUser();
         Utils.mDatabaseRef = Utils.mDatabase.getReference();
         mInitialized = true;
-    }
 
-    @NonNull
-    private String getFirebaseUserUid() {
-        return getFirebaseUser().getUid();
-    }
-
-    private FirebaseUser getFirebaseUser() {
-        return Utils.mFirebaseAuth.getCurrentUser();
     }
 
     @Override

@@ -38,7 +38,6 @@ public class LoginActivity extends AppCompatActivity {
                                     AuthUI.GOOGLE_PROVIDER
                             ).build(), RC_SIGN_IN);
                 }
-
             }
         };
     }
@@ -48,11 +47,13 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 Log.d("AUTH", "RESULT_OK");
+                //FirebaseCrash.log("AUTH RESULT OK");
                 // user is signed in!
                 FirebaseUser usr = FirebaseAuth.getInstance().getCurrentUser();
+                assert usr != null;
                 FirebaseDatabase.getInstance().getReference().child("users").child(usr.getUid()).setValue(usr);
                 Log.d("LOGIN", usr.getDisplayName());
-                startActivity(new Intent(this, MainActivity.class));
+                //startActivity(new Intent(this, MainActivity.class));
                 finish();
             } else {
                 Log.d("AUTH", "AUTH RESULT FAILED");

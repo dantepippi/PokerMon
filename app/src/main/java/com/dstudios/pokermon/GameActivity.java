@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 public class GameActivity extends AppCompatActivity {
@@ -22,13 +23,14 @@ public class GameActivity extends AppCompatActivity {
     private DatabaseReference mFirebaseDatabaseReference;
     private MyList<Level> mLevelsList;
     private Level currentLevel, nextLevel;
-    private int levelNumber = 1, lvlCount = 1, millisLeft = 0;
+    private int levelNumber = 1, lvlCount, millisLeft = 0;
     private TextView mTxtNivel, mTxtBlinds, mTextContador, mTxtNextBlinds;
     private int blindInterval;
     private Button mBtSkip, mBtReset, mBtPlayPause;
     private CountDownTimer mCountDown;
     private ViewGroup mViewGroup;
     private Tournament mTournament;
+    private DatabaseReference mTournamentRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +39,14 @@ public class GameActivity extends AppCompatActivity {
         statusPaused = true;
 
         String tournamentKey = getIntent().getStringExtra(Utils.TOURNAMENT_KEY);
-        Utils.mDatabaseRef.child(Utils.TOURNAMENTS).child(getFirebaseUserUid()).child(tournamentKey).addListenerForSingleValueEvent(new ValueEventListener() {
+        mTournamentRef = Utils.mDatabaseRef.child(Utils.TOURNAMENTS).child(getFirebaseUserUid()).child(tournamentKey);
+        mTournamentRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mTournament = dataSnapshot.getValue(Tournament.class);
+                blindInterval = mTournament.getBlind_interval();
+                mLevelsList = new MyList<>();
+                lvlCount = 1;
                 mFirebaseDatabaseReference.child(Utils.STRUCTURE).child(getFirebaseUserUid()).child(mTournament.getStructure()).orderByChild("sum").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -66,8 +72,6 @@ public class GameActivity extends AppCompatActivity {
 
             }
         });
-        blindInterval = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("BLIND_INTERVAL", 10);
-        mLevelsList = new MyList<>();
         mBtPlayPause = (Button) findViewById(R.id.start);
         mBtSkip = (Button) findViewById(R.id.skip);
         mBtReset = (Button) findViewById(R.id.reset);
@@ -96,6 +100,9 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 statusPaused = !statusPaused;
+                if (mTournament.getTimestamp_started() == null ) {
+                    mTournamentRef.child("timestamp_started").setValue(ServerValue.TIMESTAMP);
+                }
                 if (statusPaused) {
                     mBtPlayPause.setText(getResources().getText(R.string.play));
                 }
