@@ -1,5 +1,6 @@
 package com.dstudios.pokermon;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,12 +12,19 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,6 +41,20 @@ public class MainActivity extends AppCompatActivity
     private FirebaseUser mFirebaseUser;
     private User mUser;
     private static boolean mInitialized = false;
+    private FirebaseRecyclerAdapter<Tournament, TournamentViewHolder> mFirebaseAdapter;
+    private RecyclerView mTournamentRecyclerView;
+    private LinearLayoutManager mLinearLayoutManager;
+
+    public static class TournamentViewHolder extends RecyclerView.ViewHolder {
+        public TextView textName;
+
+
+        public TournamentViewHolder(View v) {
+            super(v);
+            textName = (TextView) itemView.findViewById(R.id.tournament_name);
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +98,24 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mLinearLayoutManager.setStackFromEnd(false);
+        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mTournamentRecyclerView = (RecyclerView) findViewById(R.id.tournamentRecyclerView);
+
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<Tournament, TournamentViewHolder>(
+                Tournament.class,
+                R.layout.item_tournament,
+                TournamentViewHolder.class,
+                Utils.mDatabaseRef.child(Utils.TOURNAMENTS).child(mFirebaseUser.getUid()).orderByChild("timestamp_created")) {
+
+            @Override
+            protected void populateViewHolder(TournamentViewHolder viewHolder, Tournament tournament, int position) {
+                viewHolder.textName.setText(tournament.getName());
+            }
+        };
+        mTournamentRecyclerView.setAdapter(mFirebaseAdapter);
+        mTournamentRecyclerView.setLayoutManager(mLinearLayoutManager);
         DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);

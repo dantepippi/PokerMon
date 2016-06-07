@@ -6,6 +6,12 @@
     android:orientation="vertical"
     android:padding="4dip" >
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/tournamentRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ECEFF1" />
+
     <Button
         android:id="@+id/add_tournament"
         android:layout_width="wrap_content"
@@ -13,13 +19,4 @@
         android:text="@string/add_tournament" >
     </Button>
 
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1" />
-    <TextView android:id="@android:id/empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no_tournaments"/>
 </LinearLayout>

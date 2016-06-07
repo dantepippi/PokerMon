@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -38,15 +39,6 @@
             android:label="@string/title_activity_game"
             android:parentActivityName=".MainActivity"
             android:theme="@style/FullscreenTheme"></activity>
-        <activity
-            android:name=".LevelListActivity"
-            android:label="@string/title_level_list"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.dstudios.pokermon.MainActivity" />
-        </activity>
     </application>
 
 </manifest>

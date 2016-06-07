@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class Tournament {
 
+    private String name;
     private Long timestamp_created;
     private Long timestamp_started;
     private Long timestamp_finished;
@@ -115,8 +116,17 @@ public class Tournament {
         this.timestamp_started = timestamp_started;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
+        result.put("name", name);
         result.put("owner_uid", owner_uid);
         result.put("buyin", buy_in);
         result.put("rebuy", rebuy);

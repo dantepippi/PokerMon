@@ -32,7 +32,6 @@ public class StructureActivity extends AppCompatActivity {
     private FirebaseRecyclerAdapter<Level, StructureViewHolder> mFirebaseAdapter;
     private ProgressBar mProgressBar;
     private Button mSendButton;
-    public static final String STRUCTURE_CHILD = "structure";
     private EditText mEditSB;
     private EditText mEditBB;
     private EditText mEditAnte;
@@ -73,7 +72,7 @@ public class StructureActivity extends AppCompatActivity {
                 Level.class,
                 R.layout.item_structure,
                 StructureViewHolder.class,
-                Utils.mDatabaseRef.child(STRUCTURE_CHILD).child(mFirebaseUser.getUid()).child("Fast").orderByChild("sum")) {
+                Utils.mDatabaseRef.child(Utils.STRUCTURE).child(mFirebaseUser.getUid()).child("Fast").orderByChild("sum")) {
 
             @Override
             protected void populateViewHolder(StructureViewHolder viewHolder, Level level, int position) {
@@ -102,7 +101,7 @@ public class StructureActivity extends AppCompatActivity {
                 level.setBig_blind(new Integer(mEditBB.getText().toString()));
                 level.setAnte(!"".equals(mEditAnte.getText().toString())  ? new Integer(mEditAnte.getText().toString()) : 0);
                 level.setSum(new Long(level.getSmall_blind().toString()+level.getBig_blind()+level.getAnte()));
-                Utils.mDatabaseRef.child(STRUCTURE_CHILD).child(mFirebaseUser.getUid()).child("Fast").push().setValue(level);
+                Utils.mDatabaseRef.child(Utils.STRUCTURE).child(mFirebaseUser.getUid()).child("Fast").push().setValue(level);
             }
         });
         mStructureRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext()));

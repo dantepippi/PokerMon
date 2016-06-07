@@ -67,6 +67,7 @@ public class TournamentActivity extends AppCompatActivity {
         });
 
         Button btAdd = (Button) findViewById(R.id.addButton);
+        final EditText name = (EditText) findViewById(R.id.tournament_name);
         final EditText buyin = (EditText) findViewById(R.id.buyin);
         final EditText rebuy = (EditText) findViewById(R.id.rebuy);
         final EditText addOn = (EditText) findViewById(R.id.addon);
@@ -76,6 +77,7 @@ public class TournamentActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Tournament tournament = new Tournament();
                 String firebaseUserUid = getFirebaseUserUid();
+                tournament.setName(name.getText().toString());
                 tournament.setOwner_uid(firebaseUserUid);
                 tournament.setLast_rebuy_level(new Integer(lastRebuyLevel.getText().toString()));
                 tournament.setBuy_in(buyin.getText().toString());
