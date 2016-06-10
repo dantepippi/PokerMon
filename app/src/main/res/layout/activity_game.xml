@@ -8,78 +8,89 @@
     android:orientation="vertical"
     android:padding="4dip">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/txtContador"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#E6E6E6"
-            android:textSize="80sp" />
-
-        <TextView
-            android:id="@+id/txtInicio"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="" />
-
-        <TextView
-            android:id="@+id/txtNivel"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#E6E6E6" />
-
-        <TextView
-            android:id="@+id/txtBlinds"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#E6E6E6"
-            android:textSize="40sp" />
-
-        <TextView
-            android:id="@+id/nextBlinds"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#E6E6E6"
-            android:textSize="20sp" />
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/start"
+            <TextView
+                android:id="@+id/txtContador"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/play">
-                <requestFocus />
-            </Button>
+                android:textColor="#E6E6E6"
+                android:textSize="80sp" />
 
-            <Button
-                android:id="@+id/reset"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/txtInicio"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Reset level">
-            </Button>
+                android:text="" />
 
-            <Button
-                android:id="@+id/skip"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/txtNivel"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Skip level">
-            </Button>
+                android:textColor="#E6E6E6" />
 
-            <Button
-                android:id="@+id/timer"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/txtBlinds"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Players">
-            </Button>
+                android:textColor="#E6E6E6"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/nextBlinds"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#E6E6E6"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/pause"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_play_circle_outline_black_24dp">
+
+                    <requestFocus />
+                </Button>
+                <Button
+                    android:id="@+id/start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_play_circle_outline_black_24dp">
+
+                    <requestFocus />
+                </Button>
+
+                <Button
+                    android:id="@+id/reset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reset level"></Button>
+
+                <Button
+                    android:id="@+id/skip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Skip level"></Button>
+
+                <Button
+                    android:id="@+id/timer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Players"></Button>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

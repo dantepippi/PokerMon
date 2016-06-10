@@ -118,5 +118,6 @@
     <string name="title_level_list">Levels</string>
     <string name="title_level_detail">Level Detail</string>
     <string name="next_level">Next level</string>
+    <string name="blind_interval">Blind Interval</string>
 </resources>
 

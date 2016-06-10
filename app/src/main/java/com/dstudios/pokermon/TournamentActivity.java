@@ -72,6 +72,7 @@ public class TournamentActivity extends AppCompatActivity {
         final EditText rebuy = (EditText) findViewById(R.id.rebuy);
         final EditText addOn = (EditText) findViewById(R.id.addon);
         final EditText lastRebuyLevel = (EditText) findViewById(R.id.last_rebuy_level);
+        final EditText blindInterval = (EditText) findViewById(R.id.blind_interval);
         btAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,8 +84,8 @@ public class TournamentActivity extends AppCompatActivity {
                 tournament.setBuyIn(buyin.getText().toString());
                 tournament.setAddon(addOn.getText().toString());
                 tournament.setRebuy(rebuy.getText().toString());
+                tournament.setBlind_interval(new Integer(blindInterval.getText().toString()));
                 tournament.setLast_rebuy_level(new Integer(lastRebuyLevel.getText().toString()));
-                tournament.setBlind_interval(mSharedPreferences.getInt("BLIND_INTERVAL", 10));
                 tournament.setStructure(mClassSpinner.getSelectedItem().toString());
                 DatabaseReference tournChild = Utils.mDatabaseRef.child(Utils.TOURNAMENTS).child(firebaseUserUid);
                 DatabaseReference pushedTournament = tournChild.push();

@@ -38,6 +38,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="number"
+                android:hint="@string/blind_interval"
+                android:maxLength="7"
+                android:id="@+id/blind_interval"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
                 android:hint="@string/buyin"
                 android:maxLength="7"
                 android:id="@+id/buyin"/>

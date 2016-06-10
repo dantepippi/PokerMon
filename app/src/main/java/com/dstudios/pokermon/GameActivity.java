@@ -44,6 +44,10 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mTournament = dataSnapshot.getValue(Tournament.class);
+                if (mTournament == null) {
+                    finish();
+                    return;
+                }
                 blindInterval = mTournament.getBlind_interval();
                 mLevelsList = new MyList<>();
                 lvlCount = 1;
@@ -145,8 +149,8 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void skipLevel() {
-        switchToLevel(levelNumber);
         levelNumber++;
+        switchToLevel(levelNumber);
     }
     private void switchToLevel(int lvl) {
         try {
