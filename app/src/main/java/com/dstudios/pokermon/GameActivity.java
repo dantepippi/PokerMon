@@ -2,12 +2,12 @@ package com.dstudios.pokermon;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,11 +26,14 @@ public class GameActivity extends AppCompatActivity {
     private int levelNumber = 1, lvlCount, millisLeft = 0;
     private TextView mTxtNivel, mTxtBlinds, mTextContador, mTxtNextBlinds;
     private int blindInterval;
-    private Button mBtSkip, mBtReset, mBtPlayPause;
+    private ImageButton mBtSkip;
+    private ImageButton mBtReset;
+    private ImageButton mBtPlay, mBtPause;
     private CountDownTimer mCountDown;
     private ViewGroup mViewGroup;
     private Tournament mTournament;
     private DatabaseReference mTournamentRef;
+    private ImageButton mBtAddPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +79,11 @@ public class GameActivity extends AppCompatActivity {
 
             }
         });
-        mBtPlayPause = (Button) findViewById(R.id.start);
-        mBtSkip = (Button) findViewById(R.id.skip);
-        mBtReset = (Button) findViewById(R.id.reset);
+        mBtPlay = (ImageButton) findViewById(R.id.play);
+        mBtPause = (ImageButton) findViewById(R.id.pause);
+        mBtSkip = (ImageButton) findViewById(R.id.skip);
+        mBtReset = (ImageButton) findViewById(R.id.add_player);
+        mBtAddPlayer = (ImageButton) findViewById(R.id.reset);
         mViewGroup = (ViewGroup) findViewById(R.id.coordinator_layout_game);
         mTextContador = (TextView) findViewById(R.id.txtContador);
         mTxtNivel = (TextView) findViewById(R.id.txtNivel);
@@ -100,36 +105,48 @@ public class GameActivity extends AppCompatActivity {
             }
         });
 
-        mBtPlayPause.setOnClickListener(new View.OnClickListener() {
+        mBtAddPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                statusPaused = !statusPaused;
-                if (mTournament.getTimestamp_started() == null ) {
+
+                mTournamentRef.child("players").push();
+            }
+        });
+        mBtPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                statusPaused = true;
+                mBtPlay.setVisibility(View.VISIBLE);
+                mBtPause.setVisibility(View.GONE);
+            }
+        });
+        mBtPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                statusPaused = false;
+                if (mTournament.getTimestamp_started() == null) {
                     mTournamentRef.child("timestamp_started").setValue(ServerValue.TIMESTAMP);
                 }
-                if (statusPaused) {
-                    mBtPlayPause.setText(getResources().getText(R.string.play));
-                }
-                else {
-                    mBtPlayPause.setText(getResources().getText(R.string.pause));
-                    if (mCountDown == null) {
-                        mCountDown = new CountDownTimer(1000000000, 1000) {
+                mBtPlay.setVisibility(View.GONE);
+                mBtPause.setVisibility(View.VISIBLE);
+                if (mCountDown == null) {
+                    mCountDown = new CountDownTimer(1000000000, 1000) {
 
-                            public void onTick(long millisUntilFinished) {
-                                if (!statusPaused) {
-                                    if (millisLeft != 0)
-                                        millisLeft -= 1000;
-                                    else
-                                        skipLevel();
+                        public void onTick(long millisUntilFinished) {
+                            if (!statusPaused) {
+                                if (millisLeft != 0)
+                                    millisLeft -= 1000;
+                                else
+                                    skipLevel();
 
-                                }
-                                mTextContador.setText("" + formataTempo(millisLeft));
                             }
-                            public void onFinish() {
-                                mTextContador.setText("");
-                            }
-                        }.start();
-                    }
+                            mTextContador.setText("" + formataTempo(millisLeft));
+                        }
+
+                        public void onFinish() {
+                            mTextContador.setText("");
+                        }
+                    }.start();
                 }
             }
         });
@@ -145,16 +162,18 @@ public class GameActivity extends AppCompatActivity {
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);}
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
     }
 
     private void skipLevel() {
         levelNumber++;
         switchToLevel(levelNumber);
     }
+
     private void switchToLevel(int lvl) {
         try {
-            currentLevel = nextLevel = mLevelsList.get(lvl-1);
+            currentLevel = nextLevel = mLevelsList.get(lvl - 1);
             if (lvl < lvlCount)
                 nextLevel = mLevelsList.get(lvl);
             else
@@ -168,8 +187,8 @@ public class GameActivity extends AppCompatActivity {
 
     private void updateInfo() {
         mTxtNivel.setText(getResources().getText(R.string.level) + " " + currentLevel.getNumber().toString());
-        mTxtBlinds.setText(getResources().getText(R.string.str_blinds) + " "+ currentLevel.getSmall_blind()+"/" + currentLevel.getBig_blind());
-        mTxtNextBlinds.setText(getResources().getText(R.string.next_level) + " "+ nextLevel.getSmall_blind()+"/" + nextLevel.getBig_blind());
+        mTxtBlinds.setText(getResources().getText(R.string.str_blinds) + " " + currentLevel.getSmall_blind() + "/" + currentLevel.getBig_blind());
+        mTxtNextBlinds.setText(getResources().getText(R.string.next_level) + " " + nextLevel.getSmall_blind() + "/" + nextLevel.getBig_blind());
         mTextContador.setText(blindInterval + ":00");
         setMillisLeftWithBlindInterval();
     }

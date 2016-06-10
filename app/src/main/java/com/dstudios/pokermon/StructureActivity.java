@@ -1,30 +1,32 @@
 package com.dstudios.pokermon;
 
-import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
+import android.support.v7.widget.Toolbar;
+import android.util.SparseBooleanArray;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import static com.dstudios.pokermon.R.id.textSB;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StructureActivity extends AppCompatActivity {
     private RecyclerView mStructureRecyclerView;
@@ -36,6 +38,8 @@ public class StructureActivity extends AppCompatActivity {
     private EditText mEditBB;
     private EditText mEditAnte;
     private SharedPreferences mSharedPreference;
+    private MenuItem mMenuItemDelete;
+    private int mCountSelected = 0;
 
     public static class StructureViewHolder extends RecyclerView.ViewHolder {
         public TextView textSB;
@@ -54,10 +58,116 @@ public class StructureActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_structure, menu);
+        mMenuItemDelete = menu.findItem(R.id.action_delete);
+        return true;
+    }
+
+    ///////////////////////////////////////////////////////
+
+
+    private ActionMode mActionMode;
+
+    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+
+        // Called when the action mode is created; startActionMode() was called
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // Inflate a menu resource providing context menu items
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.menu_structure, menu);
+            return true;
+        }
+
+        // Called each time the action mode is shown. Always called after onCreateActionMode, but
+        // may be called multiple times if the mode is invalidated.
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false; // Return false if nothing is done
+        }
+
+        // Called when the user selects a contextual menu item
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_delete:
+                    mode.finish(); // Action picked, so close the CAB
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        // Called when the user exits the action mode
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mActionMode = null;
+        }
+    };
+    private SparseBooleanArray mSelectedItems = new SparseBooleanArray(20);
+
+    // …
+
+    public void toggleSelection(int pos) {
+        if (mSelectedItems.get(pos, false)) {
+            mSelectedItems.delete(pos);
+        }
+        else {
+            mSelectedItems.put(pos, true);
+        }
+    }
+
+    public void clearSelections() {
+        mSelectedItems.clear();
+    }
+
+    public int getSelectedItemCount() {
+        return mSelectedItems.size();
+    }
+
+    public List<Integer> getSelectedItems() {
+        List<Integer> items =
+                new ArrayList<Integer>(mSelectedItems.size());
+        for (int i = 0; i < mSelectedItems.size(); i++) {
+            items.add(mSelectedItems.keyAt(i));
+        }
+        return items;
+    }
+
+    ////////////////////////////////////////////////////
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                List<Integer> selectedItems = getSelectedItems();
+                for (int i =0; i < selectedItems.size(); i++) {
+                    Integer position = selectedItems.get(i);
+                    mFirebaseAdapter.getRef(position).removeValue();
+                    mFirebaseAdapter.notifyItemRemoved(position);
+                    mMenuItemDelete.setVisible(false);
+                }
+                clearSelections();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_structure);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.struc_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
         final FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
         mStructureRecyclerView = (RecyclerView) findViewById(R.id.structureRecyclerView);
@@ -73,6 +183,7 @@ public class StructureActivity extends AppCompatActivity {
                 R.layout.item_structure,
                 StructureViewHolder.class,
                 Utils.mDatabaseRef.child(Utils.STRUCTURE).child(mFirebaseUser.getUid()).child("Fast").orderByChild("sum")) {
+
 
             @Override
             protected void populateViewHolder(StructureViewHolder viewHolder, Level level, int position) {
@@ -104,18 +215,28 @@ public class StructureActivity extends AppCompatActivity {
                 Utils.mDatabaseRef.child(Utils.STRUCTURE).child(mFirebaseUser.getUid()).child("Fast").push().setValue(level);
             }
         });
-        mStructureRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext()));
+        mStructureRecyclerView.setHasFixedSize(true);
         mStructureRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        DatabaseReference ref = mFirebaseAdapter.getRef(position);
-                        ref.removeValue();
+                        //DatabaseReference ref = mFirebaseAdapter.getRef(position);
+                        //ref.removeValue();
+                        boolean isSelected = !view.isSelected();
+                        toggleSelection(position);
+                        if (isSelected) {
+
+                            mCountSelected++;
+                        } else {
+                            mCountSelected--;
+                        }
+                        view.setSelected(isSelected);
+                        view.setBackgroundColor(isSelected ? Color.RED : Color.LTGRAY);
+                        mMenuItemDelete.setVisible(mCountSelected > 0);
                     }
 
                 })
         );
-
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {

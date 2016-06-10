@@ -19,13 +19,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/txtContador"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#E6E6E6"
-                android:textSize="80sp" />
-
-            <TextView
                 android:id="@+id/txtInicio"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -51,45 +44,70 @@
                 android:textColor="#E6E6E6"
                 android:textSize="20sp" />
 
+            <TextView
+                android:id="@+id/txtContador"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#E6E6E6"
+                android:textSize="80sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal">
 
-                <Button
+                <ImageButton
                     android:id="@+id/pause"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_play_circle_outline_black_24dp">
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:background="@null"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_pause_circle_outline_black_48dp"
+                    android:tint="@color/buttonTextColor"
+                    android:visibility="gone">
 
                     <requestFocus />
-                </Button>
-                <Button
-                    android:id="@+id/start"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_play_circle_outline_black_24dp">
+                </ImageButton>
+
+                <ImageButton
+                    android:id="@+id/play"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:background="@null"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_play_circle_outline_black_48dp"
+                    android:tint="@color/buttonTextColor">
 
                     <requestFocus />
-                </Button>
+                </ImageButton>
 
-                <Button
+                <ImageButton
                     android:id="@+id/reset"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Reset level"></Button>
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:background="@null"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_replay_black_48dp"
+                    android:tint="@color/buttonTextColor">
+                </ImageButton>
 
-                <Button
+                <ImageButton
                     android:id="@+id/skip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Skip level"></Button>
-
-                <Button
-                    android:id="@+id/timer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Players"></Button>
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:background="@null"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_skip_next_black_48dp"
+                    android:tint="@color/buttonTextColor"/>
+                <ImageButton
+                    android:id="@+id/add_player"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:background="@null"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_person_add_black_48dp"
+                    android:tint="@color/buttonTextColor"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
