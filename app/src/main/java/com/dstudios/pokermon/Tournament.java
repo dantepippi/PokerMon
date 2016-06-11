@@ -8,8 +8,6 @@ public class Tournament {
 
     private String name;
     private Long timestamp_created;
-    private Long timestamp_started;
-    private Long timestamp_finished;
     private String structure;
     private String owner_uid;
     private String buyin;
@@ -91,14 +89,6 @@ public class Tournament {
         this.timestamp_created = timestamp_created;
     }
 
-    public Long getTimestamp_started() {
-        return this.timestamp_started;
-    }
-
-
-    public void setTimestamp_started(Long timestamp_started) {
-        this.timestamp_started = timestamp_started;
-    }
 
     public String getName() {
         return name;

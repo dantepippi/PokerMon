@@ -19,7 +19,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 public class GameActivity extends AppCompatActivity {
-    private Boolean statusPaused;
+    //private Boolean statusPaused;
     private DatabaseReference mFirebaseDatabaseReference;
     private MyList<Level> mLevelsList;
     private Level currentLevel, nextLevel;
@@ -34,14 +34,21 @@ public class GameActivity extends AppCompatActivity {
     private Tournament mTournament;
     private DatabaseReference mTournamentRef;
     private ImageButton mBtAddPlayer;
+    private Game mCurrentGame;
+    private String gameKey;
+    private DatabaseReference mCurrentGameRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        statusPaused = true;
-
         String tournamentKey = getIntent().getStringExtra(Utils.TOURNAMENT_KEY);
+        mCurrentGame = new Game();
+        mCurrentGame.setTournament(tournamentKey);
+        mCurrentGame.setPaused(true);
+        mCurrentGameRef = Utils.mDatabaseRef.child(Utils.GAMES).child(getFirebaseUserUid()).push();
+        mCurrentGameRef.setValue(mCurrentGame);
+        gameKey = mCurrentGameRef.getKey();
         mTournamentRef = Utils.mDatabaseRef.child(Utils.TOURNAMENTS).child(getFirebaseUserUid()).child(tournamentKey);
         mTournamentRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -115,7 +122,8 @@ public class GameActivity extends AppCompatActivity {
         mBtPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                statusPaused = true;
+                mCurrentGame.setPaused(true);
+                mCurrentGameRef.child("paused").setValue(true);
                 mBtPlay.setVisibility(View.VISIBLE);
                 mBtPause.setVisibility(View.GONE);
             }
@@ -123,9 +131,10 @@ public class GameActivity extends AppCompatActivity {
         mBtPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                statusPaused = false;
-                if (mTournament.getTimestamp_started() == null) {
-                    mTournamentRef.child("timestamp_started").setValue(ServerValue.TIMESTAMP);
+                mCurrentGame.setPaused(false);
+                mCurrentGameRef.child("paused").setValue(false);
+                if (mCurrentGame.getTimestampStarted() == null) {
+                    mCurrentGameRef.child("timestamp_started").setValue(ServerValue.TIMESTAMP);
                 }
                 mBtPlay.setVisibility(View.GONE);
                 mBtPause.setVisibility(View.VISIBLE);
@@ -133,7 +142,7 @@ public class GameActivity extends AppCompatActivity {
                     mCountDown = new CountDownTimer(1000000000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
-                            if (!statusPaused) {
+                            if (!mCurrentGame.isPaused()) {
                                 if (millisLeft != 0)
                                     millisLeft -= 1000;
                                 else
@@ -199,17 +208,11 @@ public class GameActivity extends AppCompatActivity {
 
     private String formataTempo(long millis) {
         String output;
-        long seconds = millis / 1000;
-        long minutes = seconds / 60;
+        int seconds = (int) (millis / 1000);
+        int minutes = seconds / 60;
         seconds = seconds % 60;
         minutes = minutes % 60;
-        String secondsD = String.valueOf(seconds);
-        String minutesD = String.valueOf(minutes);
-        if (seconds < 10)
-            secondsD = "0" + seconds;
-        if (minutes < 10)
-            minutesD = "0" + minutes;
-        output = minutesD + ":" + secondsD;
+        output = String.format("%02d:%02d", minutes, seconds);
         return output;
     }
 

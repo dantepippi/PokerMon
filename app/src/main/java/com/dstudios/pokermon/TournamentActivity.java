@@ -30,7 +30,6 @@ public class TournamentActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-
         mClassSpinner.setSelection(0);
     }
 
