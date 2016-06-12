@@ -18,6 +18,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Date;
+
 public class GameActivity extends AppCompatActivity {
     //private Boolean statusPaused;
     private DatabaseReference mFirebaseDatabaseReference;
@@ -204,6 +206,8 @@ public class GameActivity extends AppCompatActivity {
 
     private void setMillisLeftWithBlindInterval() {
         millisLeft = blindInterval * 60 * 1000;
+        mCurrentGameRef.child("lastActionTime");
+        mCurrentGameRef.child("millisLeft").setValue(ServerValue.TIMESTAMP);
     }
 
     private String formataTempo(long millis) {
@@ -211,7 +215,6 @@ public class GameActivity extends AppCompatActivity {
         int seconds = (int) (millis / 1000);
         int minutes = seconds / 60;
         seconds = seconds % 60;
-        minutes = minutes % 60;
         output = String.format("%02d:%02d", minutes, seconds);
         return output;
     }

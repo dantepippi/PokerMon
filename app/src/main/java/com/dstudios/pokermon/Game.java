@@ -9,8 +9,26 @@ public class Game {
     private Long timestampFinished;
     private boolean paused;
     private Long nextLevelTime;
+    private Long lastActionTime;
     private Level currentLevel;
+    private Integer millisLeft;
     private String tournament;
+
+    public Long getLastActionTime() {
+        return lastActionTime;
+    }
+
+    public void setLastActionTime(Long lastActionTime) {
+        this.lastActionTime = lastActionTime;
+    }
+
+    public Integer getMillisLeft() {
+        return millisLeft;
+    }
+
+    public void setMillisLeft(Integer millisLeft) {
+        this.millisLeft = millisLeft;
+    }
 
     public String getTournament() {
         return tournament;
