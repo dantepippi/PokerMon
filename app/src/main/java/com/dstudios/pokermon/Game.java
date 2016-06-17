@@ -8,11 +8,20 @@ public class Game {
     private Long timestampStarted;
     private Long timestampFinished;
     private boolean paused;
+    private String creatorUid;
     private Long nextLevelTime;
     private Long lastActionTime;
     private Level currentLevel;
     private Integer millisLeft;
     private String tournament;
+
+    public String getCreatorUid() {
+        return creatorUid;
+    }
+
+    public void setCreatorUid(String creatorUid) {
+        this.creatorUid = creatorUid;
+    }
 
     public Long getLastActionTime() {
         return lastActionTime;

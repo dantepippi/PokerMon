@@ -45,12 +45,18 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         String tournamentKey = getIntent().getStringExtra(Utils.TOURNAMENT_KEY);
+        String gameKey = getIntent().getStringExtra(Utils.GAME_KEY);
         mCurrentGame = new Game();
         mCurrentGame.setTournament(tournamentKey);
-        mCurrentGame.setPaused(true);
-        mCurrentGameRef = Utils.mDatabaseRef.child(Utils.GAMES).child(getFirebaseUserUid()).push();
+        if (gameKey == null) {
+            mCurrentGameRef = Utils.mDatabaseRef.child(Utils.GAMES).child(getFirebaseUserUid()).push();
+            mCurrentGame.setPaused(true);
+            gameKey = mCurrentGameRef.getKey();
+        } else {
+            mCurrentGameRef = Utils.mDatabaseRef.child(Utils.GAMES).child(getFirebaseUserUid()).child(gameKey);
+        }
+
         mCurrentGameRef.setValue(mCurrentGame);
-        gameKey = mCurrentGameRef.getKey();
         mTournamentRef = Utils.mDatabaseRef.child(Utils.TOURNAMENTS).child(getFirebaseUserUid()).child(tournamentKey);
         mTournamentRef.addValueEventListener(new ValueEventListener() {
             @Override

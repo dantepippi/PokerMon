@@ -12,6 +12,7 @@ public class Utils {
     public static final String TOURNAMENT_KEY = "com.dstudios.pokermon.TOURNAMENT_KEY";
     public static final String STRUCTURE = "structure";
     public static final String GAMES = "games";
+    public static final String GAME_KEY = "com.dstudios.pokermon.GAME_KEY";
     public static FirebaseAuth mFirebaseAuth;
     public static FirebaseDatabase mDatabase;
     public static DatabaseReference mDatabaseRef;
